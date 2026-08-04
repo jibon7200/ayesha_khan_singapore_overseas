@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}ডকুমেন্ট আপলোড{% endblock %}
+{% block content %}
+<div class="card p-4" style="max-width:600px;">
+  <h5 class="mb-3">নতুন ডকুমেন্ট আপলোড</h5>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% include "partials/form_fields.html" %}
+    <button type="submit" class="btn btn-primary">আপলোড করুন</button>
+    <a href="{% url 'documents:list' %}" class="btn btn-outline-secondary">বাতিল</a>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}ডকুমেন্টস{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h5 class="mb-0">ডকুমেন্ট ম্যানেজমেন্ট</h5>
+  <a href="{% url 'documents:add' %}" class="btn btn-primary btn-sm"><i class="bi bi-upload"></i> নতুন ডকুমেন্ট আপলোড</a>
+</div>
+
+<div class="card p-3 mb-3">
+  <form class="row g-2" method="get">
+    <div class="col-md-8"><input type="text" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="টাইটেল / পাসপোর্ট নম্বর দিয়ে সার্চ"></div>
+    <div class="col-md-4"><button class="btn btn-outline-primary w-100">সার্চ</button></div>
+  </form>
+</div>
+
+<div class="card p-3">
+  <div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead><tr><th>টাইটেল</th><th>ক্যাটাগরি</th><th>পাসপোর্ট</th><th>আপলোডকারী</th><th>তারিখ</th><th></th></tr></thead>
+    <tbody>
+    {% for d in documents %}
+      <tr>
+        <td><a href="{{ d.file.url }}" target="_blank">{{ d.title }}</a></td>
+        <td>{{ d.category|default:"-" }}</td>
+        <td>{{ d.passport|default:"-" }}</td>
+        <td>{{ d.uploaded_by|default:"-" }}</td>
+        <td>{{ d.uploaded_at|date:"d M Y" }}</td>
+        <td>{% if user.is_admin_level %}<a href="{% url 'documents:delete' d.pk %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>{% endif %}</td>
+      </tr>
+    {% empty %}<tr><td colspan="6" class="text-center text-muted py-4">কোনো ডকুমেন্ট পাওয়া যায়নি।</td></tr>{% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% include "partials/pagination.html" %}
+</div>
+{% endblock %}

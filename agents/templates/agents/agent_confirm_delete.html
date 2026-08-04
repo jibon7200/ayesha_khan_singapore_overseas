@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}ডিলিট নিশ্চিত করুন{% endblock %}
+{% block content %}
+<div class="card p-4" style="max-width:500px;">
+  <h5 class="text-danger mb-3"><i class="bi bi-exclamation-triangle"></i> ডিলিট নিশ্চিত করুন</h5>
+  <p>আপনি কি নিশ্চিত যে <strong>{{ object }}</strong> ডিলিট করতে চান?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">হ্যাঁ, ডিলিট করুন</button>
+    <a href="{% url 'agents:list' %}" class="btn btn-outline-secondary">বাতিল</a>
+  </form>
+</div>
+{% endblock %}

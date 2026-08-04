@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}টিকিট বিবরণ{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h5 class="mb-0">{{ ticket.passenger_name }} — {{ ticket.airline_name }}</h5>
+  <a href="{% url 'airtickets:edit' ticket.pk %}" class="btn btn-sm btn-outline-primary">সম্পাদনা</a>
+</div>
+<div class="card p-3">
+  <div class="row">
+    <div class="col-sm-6"><p><strong>পাসপোর্ট:</strong> {{ ticket.passport }}</p></div>
+    <div class="col-sm-6"><p><strong>PNR:</strong> {{ ticket.pnr }}</p></div>
+    <div class="col-sm-6"><p><strong>ফ্লাইট নং:</strong> {{ ticket.flight_number }}</p></div>
+    <div class="col-sm-6"><p><strong>স্ট্যাটাস:</strong> <span class="badge bg-info text-dark">{{ ticket.get_status_display }}</span></p></div>
+    <div class="col-sm-6"><p><strong>ভ্রমণ তারিখ:</strong> {{ ticket.travel_date|default:"-" }}</p></div>
+    <div class="col-sm-6"><p><strong>রিটার্ন তারিখ:</strong> {{ ticket.return_date|default:"-" }}</p></div>
+    <div class="col-sm-6"><p><strong>উৎস:</strong> {{ ticket.origin|default:"-" }}</p></div>
+    <div class="col-sm-6"><p><strong>গন্তব্য:</strong> {{ ticket.destination|default:"-" }}</p></div>
+  </div>
+  {% if ticket.e_ticket_file %}<a href="{{ ticket.e_ticket_file.url }}" target="_blank" class="btn btn-sm btn-outline-secondary">E-Ticket দেখুন</a>{% endif %}
+  {% if ticket.remark %}<p class="mt-2"><strong>রিমার্ক:</strong> {{ ticket.remark }}</p>{% endif %}
+</div>
+{% endblock %}

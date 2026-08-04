@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}AI Passport Scan{% endblock %}
+{% block content %}
+<div class="card p-4" style="max-width:650px;">
+  <h5 class="mb-2">AI Passport Scan & OCR <span class="badge bg-secondary">Future-Ready Feature</span></h5>
+  <p class="text-muted small">পাসপোর্টের ছবি আপলোড করুন — সিস্টেম স্বয়ংক্রিয়ভাবে তথ্য পড়ার চেষ্টা করবে। এই ফিচার সম্পূর্ণ কাজ করার জন্য সার্ভারে Tesseract OCR ইনস্টল ও কনফিগার করতে হবে (README দেখুন)।</p>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% include "partials/form_fields.html" %}
+    <button type="submit" class="btn btn-primary">স্ক্যান করুন</button>
+  </form>
+
+  {% if extracted %}
+    <hr>
+    {% if extracted.error %}
+      <div class="alert alert-warning mt-3">{{ extracted.error }}</div>
+    {% else %}
+      <h6 class="mt-3">OCR ফলাফল</h6>
+      <pre class="bg-light p-2 small" style="white-space:pre-wrap;">{{ extracted.mrz_raw_text }}</pre>
+      {% if extracted.note %}<p class="text-muted small">{{ extracted.note }}</p>{% endif %}
+      <a href="{% url 'passports:add' %}" class="btn btn-outline-primary btn-sm">এই তথ্য দিয়ে নতুন পাসপোর্ট ফর্ম পূরণ করুন</a>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

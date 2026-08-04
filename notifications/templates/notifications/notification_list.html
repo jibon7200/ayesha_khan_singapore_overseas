@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}নোটিফিকেশনস{% endblock %}
+{% block content %}
+<h5 class="mb-3">নোটিফিকেশনস</h5>
+<div class="card p-3">
+  <ul class="list-group list-group-flush">
+    {% for n in notifications %}
+      <li class="list-group-item d-flex justify-content-between align-items-start {% if not n.is_read %}bg-light{% endif %}">
+        <div>
+          <div class="fw-semibold small">{{ n.title }}</div>
+          <div class="text-muted small">{{ n.get_notification_type_display }} • {{ n.created_at }}</div>
+          {% if n.message %}<div class="small">{{ n.message }}</div>{% endif %}
+          {% if n.related_url %}<a href="{{ n.related_url }}" class="small">বিস্তারিত দেখুন &raquo;</a>{% endif %}
+        </div>
+        {% if not n.is_read %}
+        <form method="post" action="{% url 'notifications:mark_read' n.pk %}">
+          {% csrf_token %}
+          <button class="btn btn-sm btn-outline-secondary">Mark Read</button>
+        </form>
+        {% endif %}
+      </li>
+    {% empty %}<li class="list-group-item text-muted">কোনো নোটিফিকেশন নেই।</li>{% endfor %}
+  </ul>
+  {% include "partials/pagination.html" %}
+</div>
+{% endblock %}

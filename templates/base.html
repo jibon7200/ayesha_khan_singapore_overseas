@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Dashboard{% endblock %} - {{ company.company_name|default:"Ayesha Khan Singapore Overseas" }}</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<link href="{% static 'css/style.css' %}" rel="stylesheet">
+{% block extra_css %}{% endblock %}
+</head>
+<body>
+<div class="app-wrapper">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      {% if company.logo %}<img src="{{ company.logo.url }}" alt="logo" class="sidebar-logo">{% else %}<i class="bi bi-shield-check"></i>{% endif %}
+      <span>{{ company.company_name|default:"Ayesha Khan Singapore Overseas" }}</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="{% url 'dashboard:home' %}" class="nav-link {% if request.resolver_match.app_name == 'dashboard' %}active{% endif %}"><i class="bi bi-speedometer2"></i> ড্যাশবোর্ড</a>
+      <a href="{% url 'agents:list' %}" class="nav-link {% if request.resolver_match.app_name == 'agents' %}active{% endif %}"><i class="bi bi-person-badge"></i> এজেন্টস</a>
+      <a href="{% url 'delegates:list' %}" class="nav-link {% if request.resolver_match.app_name == 'delegates' %}active{% endif %}"><i class="bi bi-people"></i> ডেলিগেটস</a>
+      <a href="{% url 'passports:list' %}" class="nav-link {% if request.resolver_match.app_name == 'passports' %}active{% endif %}"><i class="bi bi-book"></i> পাসপোর্টস</a>
+      <a href="{% url 'visa:list' %}" class="nav-link {% if request.resolver_match.app_name == 'visa' %}active{% endif %}"><i class="bi bi-passport"></i> ভিসা প্রসেসিং</a>
+      <a href="{% url 'visa:check' %}" class="nav-link"><i class="bi bi-search"></i> ভিসা চেক</a>
+      <a href="{% url 'airtickets:list' %}" class="nav-link {% if request.resolver_match.app_name == 'airtickets' %}active{% endif %}"><i class="bi bi-airplane"></i> এয়ার টিকিট চেকিং</a>
+      <a href="{% url 'documents:list' %}" class="nav-link {% if request.resolver_match.app_name == 'documents' %}active{% endif %}"><i class="bi bi-file-earmark-text"></i> ডকুমেন্টস</a>
+      <a href="{% url 'reports:home' %}" class="nav-link {% if request.resolver_match.app_name == 'reports' %}active{% endif %}"><i class="bi bi-bar-chart"></i> রিপোর্টস</a>
+      <a href="{% url 'notifications:list' %}" class="nav-link {% if request.resolver_match.app_name == 'notifications' %}active{% endif %}"><i class="bi bi-bell"></i> নোটিফিকেশনস</a>
+      {% if user.is_admin_level %}
+      <a href="{% url 'accounts:user_list' %}" class="nav-link {% if request.resolver_match.app_name == 'accounts' %}active{% endif %}"><i class="bi bi-people-fill"></i> ইউজার ম্যানেজমেন্ট</a>
+      <a href="{% url 'company_settings:settings' %}" class="nav-link {% if request.resolver_match.app_name == 'company_settings' %}active{% endif %}"><i class="bi bi-gear"></i> সেটিংস</a>
+      {% endif %}
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <div class="main-content">
+    <header class="topbar">
+      <button class="btn btn-sm btn-outline-secondary d-lg-none" id="sidebarToggle"><i class="bi bi-list"></i></button>
+      <form class="topbar-search" method="get" action="{% url 'dashboard:smart_search' %}">
+        <input type="text" name="q" class="form-control" placeholder="পাসপোর্ট নম্বর, নাম, এজেন্ট বা ডেলিগেট সার্চ করুন...">
+      </form>
+      <div class="topbar-right">
+        <a href="{% url 'notifications:list' %}" class="position-relative me-3 text-dark">
+          <i class="bi bi-bell fs-5"></i>
+          {% if unread_notification_count %}<span class="badge rounded-pill bg-danger notif-badge">{{ unread_notification_count }}</span>{% endif %}
+        </a>
+        <div class="dropdown">
+          <a class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" href="#" data-bs-toggle="dropdown">
+            <i class="bi bi-person-circle fs-5 me-1"></i> {{ user.get_full_name|default:user.username }}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="{% url 'accounts:password_change' %}"><i class="bi bi-key"></i> পাসওয়ার্ড পরিবর্তন</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}
+                <button class="dropdown-item text-danger" type="submit"><i class="bi bi-box-arrow-right"></i> Logout</button>
+              </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.getElementById('sidebarToggle')?.addEventListener('click', function () {
+    document.getElementById('sidebar').classList.toggle('show');
+  });
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

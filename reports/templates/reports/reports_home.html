@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}রিপোর্টস{% endblock %}
+{% block content %}
+<h5 class="mb-3">Reports & Analytics</h5>
+
+<div class="row g-3">
+  <div class="col-md-6 col-lg-3">
+    <div class="card p-3">
+      <h6><i class="bi bi-book"></i> Passport Report</h6>
+      <p class="text-muted small">সব পাসপোর্টের বিস্তারিত তালিকা</p>
+      <a href="{% url 'reports:passport_excel' %}" class="btn btn-sm btn-outline-success mb-1 w-100"><i class="bi bi-file-earmark-excel"></i> Excel Export</a>
+      <a href="{% url 'reports:passport_pdf' %}" class="btn btn-sm btn-outline-danger w-100"><i class="bi bi-file-earmark-pdf"></i> PDF Export</a>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-3">
+    <div class="card p-3">
+      <h6><i class="bi bi-passport"></i> Visa Report</h6>
+      <p class="text-muted small">Country-wise ও status-wise ভিসা রিপোর্ট</p>
+      <a href="{% url 'reports:visa_excel' %}" class="btn btn-sm btn-outline-success mb-1 w-100"><i class="bi bi-file-earmark-excel"></i> Excel Export</a>
+      <a href="{% url 'reports:visa_pdf' %}" class="btn btn-sm btn-outline-danger w-100"><i class="bi bi-file-earmark-pdf"></i> PDF Export</a>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-3">
+    <div class="card p-3">
+      <h6><i class="bi bi-person-badge"></i> Agent Report</h6>
+      <p class="text-muted small">এজেন্ট-ওয়াইজ পাসপোর্ট সামারি</p>
+      <a href="{% url 'reports:agent_excel' %}" class="btn btn-sm btn-outline-success w-100"><i class="bi bi-file-earmark-excel"></i> Excel Export</a>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-3">
+    <div class="card p-3">
+      <h6><i class="bi bi-people"></i> Delegate Report</h6>
+      <p class="text-muted small">ডেলিগেট-ওয়াইজ পাসপোর্ট সামারি</p>
+      <a href="{% url 'reports:delegate_excel' %}" class="btn btn-sm btn-outline-success w-100"><i class="bi bi-file-earmark-excel"></i> Excel Export</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

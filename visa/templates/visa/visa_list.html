@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}ভিসা প্রসেসিং{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h5 class="mb-0">ভিসা প্রসেসিং</h5>
+  <a href="{% url 'visa:add' %}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg"></i> নতুন ভিসা আবেদন</a>
+</div>
+
+<div class="card p-3 mb-3">
+  <form class="row g-2" method="get">
+    <div class="col-md-4"><input type="text" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="হোল্ডার নাম / অ্যাপ্লিকেশন নং"></div>
+    <div class="col-md-3"><input type="text" name="country" value="{{ request.GET.country }}" class="form-control" placeholder="দেশ"></div>
+    <div class="col-md-3">
+      <select name="status" class="form-select">
+        <option value="">সব স্ট্যাটাস</option>
+        {% for value, label in status_choices %}
+          <option value="{{ value }}" {% if request.GET.status == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2"><button class="btn btn-outline-primary w-100">সার্চ</button></div>
+  </form>
+</div>
+
+<div class="card p-3">
+  <div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead><tr><th>হোল্ডার</th><th>দেশ</th><th>ক্যাটাগরি</th><th>স্ট্যাটাস</th><th>সাবমিশন</th><th>মেয়াদ শেষ</th><th></th></tr></thead>
+    <tbody>
+    {% for v in visas %}
+      <tr>
+        <td>{{ v.passport.holder_name }}</td>
+        <td>{{ v.destination_country }}</td>
+        <td>{{ v.visa_category|default:"-" }}</td>
+        <td><span class="badge bg-info text-dark">{{ v.get_status_display }}</span></td>
+        <td>{{ v.submission_date|default:"-" }}</td>
+        <td>{{ v.visa_expiry_date|default:"-" }}</td>
+        <td>
+          <a href="{% url 'visa:detail' v.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye"></i></a>
+          <a href="{% url 'visa:edit' v.pk %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+          {% if user.is_admin_level %}<a href="{% url 'visa:delete' v.pk %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>{% endif %}
+        </td>
+      </tr>
+    {% empty %}<tr><td colspan="7" class="text-center text-muted py-4">কোনো ভিসা আবেদন পাওয়া যায়নি।</td></tr>{% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% include "partials/pagination.html" %}
+</div>
+{% endblock %}

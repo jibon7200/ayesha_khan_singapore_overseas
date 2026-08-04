@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Activity Log{% endblock %}
+{% block content %}
+<h5 class="mb-3">Activity / Audit Log</h5>
+<div class="card p-3">
+  <div class="table-responsive">
+  <table class="table table-sm">
+    <thead><tr><th>সময়</th><th>ইউজার</th><th>অ্যাকশন</th><th>মডিউল</th><th>Method</th><th>IP</th></tr></thead>
+    <tbody>
+    {% for log in logs %}
+      <tr>
+        <td>{{ log.timestamp|date:"d M Y, h:i A" }}</td>
+        <td>{{ log.user|default:"-" }}</td>
+        <td>{{ log.action }}</td>
+        <td>{{ log.module }}</td>
+        <td><span class="badge bg-secondary">{{ log.method }}</span></td>
+        <td>{{ log.ip_address|default:"-" }}</td>
+      </tr>
+    {% empty %}<tr><td colspan="6" class="text-center text-muted py-4">কোনো লগ পাওয়া যায়নি।</td></tr>{% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% include "partials/pagination.html" %}
+</div>
+{% endblock %}

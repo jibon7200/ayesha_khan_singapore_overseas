@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}{{ agent.name }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h5 class="mb-0">{{ agent.name }}</h5>
+  <a href="{% url 'agents:edit' agent.pk %}" class="btn btn-sm btn-outline-primary">সম্পাদনা</a>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-md-6">
+    <div class="card p-3">
+      <p><strong>ফোন:</strong> {{ agent.phone }}</p>
+      <p><strong>ইমেইল:</strong> {{ agent.email|default:"-" }}</p>
+      <p><strong>ঠিকানা:</strong> {{ agent.address|default:"-" }}</p>
+      <p><strong>ID/NID:</strong> {{ agent.nid_or_id_number|default:"-" }}</p>
+      <p><strong>স্ট্যাটাস:</strong> {% if agent.is_active %}<span class="badge bg-success">Active</span>{% else %}<span class="badge bg-secondary">Inactive</span>{% endif %}</p>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card p-3 text-center">
+      <div class="stat-value fs-1 fw-bold text-primary">{{ agent.total_passports }}</div>
+      <div class="text-muted">এই এজেন্টের জমাকৃত মোট পাসপোর্ট</div>
+    </div>
+  </div>
+</div>
+
+<div class="card p-3">
+  <h6>Agent-wise Passport List</h6>
+  <div class="table-responsive">
+  <table class="table table-sm">
+    <thead><tr><th>Holder</th><th>Passport No.</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    {% for p in passports %}
+      <tr><td>{{ p.holder_name }}</td><td>{{ p.passport_number }}</td><td>{{ p.get_status_display }}</td>
+      <td><a href="{% url 'passports:detail' p.pk %}" class="btn btn-sm btn-outline-secondary">View</a></td></tr>
+    {% empty %}<tr><td colspan="4" class="text-muted text-center">কোনো পাসপোর্ট নেই।</td></tr>{% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endblock %}

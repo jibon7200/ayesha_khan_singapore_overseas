@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}এয়ার টিকিট চেকিং{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h5 class="mb-0">এয়ার টিকিট চেকিং</h5>
+  <a href="{% url 'airtickets:add' %}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg"></i> নতুন টিকিট</a>
+</div>
+
+<div class="card p-3 mb-3">
+  <form class="row g-2" method="get">
+    <div class="col-md-6"><input type="text" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="যাত্রীর নাম / PNR / ফ্লাইট নম্বর"></div>
+    <div class="col-md-3">
+      <select name="status" class="form-select">
+        <option value="">সব স্ট্যাটাস</option>
+        {% for value, label in status_choices %}
+          <option value="{{ value }}" {% if request.GET.status == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3"><button class="btn btn-outline-primary w-100">সার্চ</button></div>
+  </form>
+</div>
+
+<div class="card p-3">
+  <div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead><tr><th>যাত্রী</th><th>এয়ারলাইন</th><th>PNR</th><th>ফ্লাইট</th><th>ভ্রমণ তারিখ</th><th>স্ট্যাটাস</th><th></th></tr></thead>
+    <tbody>
+    {% for t in tickets %}
+      <tr>
+        <td>{{ t.passenger_name }}</td><td>{{ t.airline_name }}</td><td>{{ t.pnr }}</td><td>{{ t.flight_number }}</td>
+        <td>{{ t.travel_date|default:"-" }}</td>
+        <td><span class="badge bg-info text-dark">{{ t.get_status_display }}</span></td>
+        <td>
+          <a href="{% url 'airtickets:detail' t.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye"></i></a>
+          <a href="{% url 'airtickets:edit' t.pk %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+          {% if user.is_admin_level %}<a href="{% url 'airtickets:delete' t.pk %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>{% endif %}
+        </td>
+      </tr>
+    {% empty %}<tr><td colspan="7" class="text-center text-muted py-4">কোনো টিকিট পাওয়া যায়নি।</td></tr>{% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% include "partials/pagination.html" %}
+</div>
+{% endblock %}

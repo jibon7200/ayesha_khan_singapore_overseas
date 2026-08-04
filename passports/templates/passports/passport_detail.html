@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}{{ passport.holder_name }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h5 class="mb-0">{{ passport.holder_name }} <small class="text-muted">({{ passport.passport_number }})</small></h5>
+  <a href="{% url 'passports:edit' passport.pk %}" class="btn btn-sm btn-outline-primary">সম্পাদনা</a>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-md-8">
+    <div class="card p-3">
+      <div class="row">
+        <div class="col-sm-6"><p><strong>জাতীয়তা:</strong> {{ passport.nationality|default:"-" }}</p></div>
+        <div class="col-sm-6"><p><strong>লিঙ্গ:</strong> {{ passport.get_gender_display|default:"-" }}</p></div>
+        <div class="col-sm-6"><p><strong>জন্ম তারিখ:</strong> {{ passport.date_of_birth|default:"-" }}</p></div>
+        <div class="col-sm-6"><p><strong>ইস্যু তারিখ:</strong> {{ passport.issue_date|default:"-" }}</p></div>
+        <div class="col-sm-6"><p><strong>মেয়াদ শেষ:</strong> {{ passport.expiry_date|default:"-" }}</p></div>
+        <div class="col-sm-6"><p><strong>স্ট্যাটাস:</strong> <span class="badge bg-info text-dark">{{ passport.get_status_display }}</span></p></div>
+        <div class="col-sm-6"><p><strong>এজেন্ট:</strong> {% if passport.agent %}<a href="{% url 'agents:detail' passport.agent.pk %}">{{ passport.agent }}</a>{% else %}-{% endif %}</p></div>
+        <div class="col-sm-6"><p><strong>ডেলিগেট:</strong> {% if passport.delegate %}<a href="{% url 'delegates:detail' passport.delegate.pk %}">{{ passport.delegate }}</a>{% else %}-{% endif %}</p></div>
+      </div>
+      {% if passport.remark %}<p><strong>রিমার্ক:</strong> {{ passport.remark }}</p>{% endif %}
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card p-3 text-center">
+      {% if passport.holder_photo %}<img src="{{ passport.holder_photo.url }}" class="img-fluid rounded mb-2" alt="photo">{% endif %}
+      {% if passport.passport_scan %}<a href="{{ passport.passport_scan.url }}" target="_blank" class="btn btn-sm btn-outline-secondary w-100 mb-1">Passport Scan দেখুন</a>{% endif %}
+      {% if passport.signature_scan %}<a href="{{ passport.signature_scan.url }}" target="_blank" class="btn btn-sm btn-outline-secondary w-100">Signature দেখুন</a>{% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="card p-3">
+  <h6>Movement History</h6>
+  <ul class="list-group list-group-flush mb-3">
+    {% for m in movements %}
+      <li class="list-group-item">
+        <div class="small fw-semibold">{{ m.action }}</div>
+        <div class="small text-muted">{{ m.location }} • {{ m.handled_by|default:"System" }} • {{ m.timestamp }}</div>
+        {% if m.note %}<div class="small">{{ m.note }}</div>{% endif %}
+      </li>
+    {% empty %}<li class="list-group-item text-muted">কোনো মুভমেন্ট নেই।</li>{% endfor %}
+  </ul>
+
+  <form method="post" action="{% url 'passports:add_movement' passport.pk %}" class="row g-2">
+    {% csrf_token %}
+    <div class="col-md-4">{{ movement_form.action }}</div>
+    <div class="col-md-3">{{ movement_form.location }}</div>
+    <div class="col-md-3">{{ movement_form.note }}</div>
+    <div class="col-md-2"><button class="btn btn-outline-primary w-100">যোগ করুন</button></div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}টিকিট ফর্ম{% endblock %}
+{% block content %}
+<div class="card p-4" style="max-width:800px;">
+  <h5 class="mb-3">{% if object %}টিকিট সম্পাদনা{% else %}নতুন এয়ার টিকিট{% endif %}</h5>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% include "partials/form_fields.html" %}
+    <button type="submit" class="btn btn-primary">সংরক্ষণ করুন</button>
+    <a href="{% url 'airtickets:list' %}" class="btn btn-outline-secondary">বাতিল</a>
+  </form>
+</div>
+{% endblock %}

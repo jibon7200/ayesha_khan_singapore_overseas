@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}সার্চ ফলাফল{% endblock %}
+{% block content %}
+<h5 class="mb-3">সার্চ ফলাফল: "{{ query }}"</h5>
+
+<div class="card p-3 mb-3">
+  <h6>পাসপোর্ট</h6>
+  {% if passports %}
+  <table class="table table-sm">
+    <thead><tr><th>Holder</th><th>Passport No.</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    {% for p in passports %}
+      <tr><td>{{ p.holder_name }}</td><td>{{ p.passport_number }}</td><td>{{ p.get_status_display }}</td>
+      <td><a href="{% url 'passports:detail' p.pk %}" class="btn btn-sm btn-outline-primary">View</a></td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}<p class="text-muted small">কোনো পাসপোর্ট পাওয়া যায়নি।</p>{% endif %}
+</div>
+
+<div class="card p-3 mb-3">
+  <h6>এজেন্ট</h6>
+  {% if agents %}
+  <ul class="list-unstyled">
+    {% for a in agents %}<li><a href="{% url 'agents:detail' a.pk %}">{{ a.name }} - {{ a.phone }}</a></li>{% endfor %}
+  </ul>
+  {% else %}<p class="text-muted small">কোনো এজেন্ট পাওয়া যায়নি।</p>{% endif %}
+</div>
+
+<div class="card p-3">
+  <h6>ডেলিগেট</h6>
+  {% if delegates %}
+  <ul class="list-unstyled">
+    {% for d in delegates %}<li><a href="{% url 'delegates:detail' d.pk %}">{{ d.name }} - {{ d.phone }}</a></li>{% endfor %}
+  </ul>
+  {% else %}<p class="text-muted small">কোনো ডেলিগেট পাওয়া যায়নি।</p>{% endif %}
+</div>
+{% endblock %}

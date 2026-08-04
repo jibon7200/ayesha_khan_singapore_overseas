@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}ডেলিগেট ফর্ম{% endblock %}
+{% block content %}
+<div class="card p-4" style="max-width:700px;">
+  <h5 class="mb-3">{% if object %}ডেলিগেট সম্পাদনা{% else %}নতুন ডেলিগেট যোগ করুন{% endif %}</h5>
+  <form method="post">
+    {% csrf_token %}
+    {% include "partials/form_fields.html" %}
+    <button type="submit" class="btn btn-primary">সংরক্ষণ করুন</button>
+    <a href="{% url 'delegates:list' %}" class="btn btn-outline-secondary">বাতিল</a>
+  </form>
+</div>
+{% endblock %}

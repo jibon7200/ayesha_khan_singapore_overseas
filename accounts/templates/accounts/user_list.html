@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}ইউজার ম্যানেজমেন্ট{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h5 class="mb-0">ইউজার ও রোল ম্যানেজমেন্ট</h5>
+  <a href="{% url 'accounts:user_add' %}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg"></i> নতুন ইউজার</a>
+</div>
+
+<div class="card p-3 mb-3">
+  <form class="row g-2" method="get">
+    <div class="col-md-6"><input type="text" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="ইউজারনেম / ইমেইল দিয়ে সার্চ করুন"></div>
+    <div class="col-md-3"><button class="btn btn-outline-primary w-100">সার্চ</button></div>
+  </form>
+</div>
+
+<div class="card p-3">
+  <div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead><tr><th>Username</th><th>নাম</th><th>রোল</th><th>ইমেইল</th><th>স্ট্যাটাস</th><th></th></tr></thead>
+    <tbody>
+    {% for u in users %}
+      <tr>
+        <td>{{ u.username }}</td>
+        <td>{{ u.get_full_name|default:"-" }}</td>
+        <td><span class="badge bg-primary">{{ u.get_role_display }}</span></td>
+        <td>{{ u.email|default:"-" }}</td>
+        <td>{% if u.is_active %}<span class="badge bg-success">Active</span>{% else %}<span class="badge bg-secondary">Inactive</span>{% endif %}</td>
+        <td>
+          <a href="{% url 'accounts:user_edit' u.pk %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+          <a href="{% url 'accounts:user_delete' u.pk %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+        </td>
+      </tr>
+    {% empty %}<tr><td colspan="6" class="text-center text-muted py-4">কোনো ইউজার পাওয়া যায়নি।</td></tr>{% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% include "partials/pagination.html" %}
+</div>
+
+<div class="mt-3">
+  <a href="{% url 'accounts:activity_log' %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-clock-history"></i> Activity / Audit Log দেখুন</a>
+</div>
+{% endblock %}

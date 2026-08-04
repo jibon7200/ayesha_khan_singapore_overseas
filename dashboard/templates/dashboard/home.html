@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}ড্যাশবোর্ড{% endblock %}
+{% block content %}
+
+<h4 class="mb-4">স্বাগতম, {{ user.get_full_name|default:user.username }} 👋</h4>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="stat-card bg-c1 d-flex justify-content-between align-items-center">
+      <div><div class="stat-value">{{ total_passports }}</div><div class="stat-label">Total Passports</div></div>
+      <i class="bi bi-book"></i>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card bg-c2 d-flex justify-content-between align-items-center">
+      <div><div class="stat-value">{{ total_agents }}</div><div class="stat-label">Total Agents</div></div>
+      <i class="bi bi-person-badge"></i>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card bg-c3 d-flex justify-content-between align-items-center">
+      <div><div class="stat-value">{{ total_delegates }}</div><div class="stat-label">Total Delegates</div></div>
+      <i class="bi bi-people"></i>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card bg-c4 d-flex justify-content-between align-items-center">
+      <div><div class="stat-value">{{ visa_processing }}</div><div class="stat-label">Visa Processing</div></div>
+      <i class="bi bi-hourglass-split"></i>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card bg-c5 d-flex justify-content-between align-items-center">
+      <div><div class="stat-value">{{ visa_completed }}</div><div class="stat-label">Visa Completed</div></div>
+      <i class="bi bi-check-circle"></i>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card bg-c6 d-flex justify-content-between align-items-center">
+      <div><div class="stat-value">{{ passport_ready_for_delivery }}</div><div class="stat-label">Ready for Delivery</div></div>
+      <i class="bi bi-box-seam"></i>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card bg-c7 d-flex justify-content-between align-items-center">
+      <div><div class="stat-value">{{ pending_passport }}</div><div class="stat-label">Pending Passport</div></div>
+      <i class="bi bi-exclamation-circle"></i>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card bg-c1 d-flex justify-content-between align-items-center">
+      <div><div class="stat-value">{{ total_air_tickets }}</div><div class="stat-label">Total Air Tickets</div></div>
+      <i class="bi bi-airplane"></i>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="card p-3 mb-4">
+      <h6 class="mb-3">Quick Actions</h6>
+      <div class="row g-2">
+        <div class="col-6 col-md-4"><a href="{% url 'passports:add' %}" class="quick-action-btn d-block"><i class="bi bi-plus-circle"></i>Add New Passport</a></div>
+        <div class="col-6 col-md-4"><a href="{% url 'agents:add' %}" class="quick-action-btn d-block"><i class="bi bi-person-plus"></i>Add New Agent</a></div>
+        <div class="col-6 col-md-4"><a href="{% url 'delegates:add' %}" class="quick-action-btn d-block"><i class="bi bi-person-plus-fill"></i>Add New Delegate</a></div>
+        <div class="col-6 col-md-4"><a href="{% url 'visa:check' %}" class="quick-action-btn d-block"><i class="bi bi-search"></i>Visa Check</a></div>
+        <div class="col-6 col-md-4"><a href="{% url 'airtickets:add' %}" class="quick-action-btn d-block"><i class="bi bi-airplane-engines"></i>Air Ticket Checking</a></div>
+        <div class="col-6 col-md-4"><a href="{% url 'documents:add' %}" class="quick-action-btn d-block"><i class="bi bi-upload"></i>Upload Document</a></div>
+      </div>
+    </div>
+
+    <div class="card p-3">
+      <h6 class="mb-3">AI & Future Features <span class="badge bg-secondary">Coming Soon Ready</span></h6>
+      <div class="row g-2">
+        <div class="col-6 col-md-4"><a href="{% url 'passports:ocr_upload' %}" class="quick-action-btn d-block"><i class="bi bi-camera"></i>AI Passport Scan</a></div>
+        <div class="col-6 col-md-4"><span class="quick-action-btn d-block text-muted"><i class="bi bi-robot"></i>AI Visa Detection ({{ ai_scanned_passports }} scanned)</span></div>
+        <div class="col-6 col-md-4"><span class="quick-action-btn d-block text-muted"><i class="bi bi-whatsapp"></i>WhatsApp Notifications</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card p-3">
+      <h6 class="mb-3">Recent Activity</h6>
+      {% if recent_notifications %}
+        <ul class="list-unstyled mb-0">
+          {% for n in recent_notifications %}
+            <li class="mb-2 pb-2 border-bottom">
+              <div class="small fw-semibold">{{ n.title }}</div>
+              <div class="small text-muted">{{ n.get_notification_type_display }} • {{ n.created_at|timesince }} আগে</div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-muted small mb-0">এখনো কোনো নতুন অ্যাক্টিভিটি নেই।</p>
+      {% endif %}
+      <a href="{% url 'notifications:list' %}" class="small mt-2 d-inline-block">সব দেখুন &raquo;</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

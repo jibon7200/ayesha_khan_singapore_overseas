@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}ভিসা চেক{% endblock %}
+{% block content %}
+<div class="card p-4 mb-3">
+  <h5 class="mb-3">ভিসা চেক</h5>
+  <form method="get" class="row g-2">
+    <div class="col-md-3">{{ form.passport_number }}</div>
+    <div class="col-md-3">{{ form.application_number }}</div>
+    <div class="col-md-3">{{ form.applicant_name }}</div>
+    <div class="col-md-2">{{ form.country }}</div>
+    <div class="col-md-1"><button class="btn btn-primary w-100"><i class="bi bi-search"></i></button></div>
+  </form>
+</div>
+
+{% if results is not None %}
+<div class="card p-3">
+  <div class="table-responsive">
+  <table class="table table-hover">
+    <thead><tr><th>হোল্ডার</th><th>পাসপোর্ট নং</th><th>দেশ</th><th>অ্যাপ্লিকেশন নং</th><th>স্ট্যাটাস</th><th></th></tr></thead>
+    <tbody>
+    {% for v in results %}
+      <tr>
+        <td>{{ v.passport.holder_name }}</td>
+        <td>{{ v.passport.passport_number }}</td>
+        <td>{{ v.destination_country }}</td>
+        <td>{{ v.application_number|default:"-" }}</td>
+        <td><span class="badge bg-info text-dark">{{ v.get_status_display }}</span></td>
+        <td><a href="{% url 'visa:detail' v.pk %}" class="btn btn-sm btn-outline-secondary">View</a></td>
+      </tr>
+    {% empty %}<tr><td colspan="6" class="text-center text-muted py-4">কোনো ফলাফল পাওয়া যায়নি।</td></tr>{% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

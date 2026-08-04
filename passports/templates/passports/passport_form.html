@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}পাসপোর্ট ফর্ম{% endblock %}
+{% block content %}
+<div class="card p-4" style="max-width:900px;">
+  <h5 class="mb-3">{% if object %}পাসপোর্ট সম্পাদনা{% else %}নতুন পাসপোর্ট যোগ করুন{% endif %}</h5>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-md-6">{% include "partials/form_fields.html" %}</div>
+    </div>
+    <button type="submit" class="btn btn-primary">সংরক্ষণ করুন</button>
+    <a href="{% url 'passports:list' %}" class="btn btn-outline-secondary">বাতিল</a>
+  </form>
+</div>
+{% endblock %}
