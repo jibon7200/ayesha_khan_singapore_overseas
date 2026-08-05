@@ -22,6 +22,7 @@ class User(AbstractUser):
     phone_number = models.CharField(max_length=20, blank=True)
     profile_photo = models.ImageField(upload_to="user_photos/", blank=True, null=True)
     is_active_staff = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
